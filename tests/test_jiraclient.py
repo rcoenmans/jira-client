@@ -33,16 +33,16 @@ class JiraClientTest(unittest.TestCase):
         self.password = file.readline().rstrip()
         file.close()
 
-    def test_get_all_boards(self):
+    def test_get_boards(self):
         client = JiraClient(self.host, self.username, self.password)
-        boards = client.get_all_boards()
+        boards = client.get_boards()
         self.assertIsNotNone(boards)
         self.assertGreater(len(boards), 0)
     
     def test_get_projects_for_board(self):
         client = JiraClient(self.host, self.username, self.password)
         
-        boards = client.get_all_boards()
+        boards = client.get_boards()
         self.assertIsNotNone(boards)
         self.assertGreater(len(boards), 0)
 

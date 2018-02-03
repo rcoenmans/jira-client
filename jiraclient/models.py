@@ -59,3 +59,9 @@ class Project(object):
         self.key = None
         self.name = None
         self.projectTypeKey = None
+
+class Epic(object):
+    def __init__(self):
+        self.id = None
+        self.key = None
+        self.name = None

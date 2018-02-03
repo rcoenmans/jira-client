@@ -40,16 +40,6 @@ class _HTTPClient(object):
         self.protocol = protocol
         self.session = session
         self.timeout = timeout
-
-        # By default, requests adds an Accept:*/* and Accept-Encoding to the session, 
-        # which causes issues with some Azure REST APIs. Removing these here gives us 
-        # the flexibility to add it back on a case by case basis.
-        if 'Accept' in self.session.headers:
-            del self.session.headers['Accept']
-
-        if 'Accept-Encoding' in self.session.headers:
-            del self.session.headers['Accept-Encoding']
-
         self.proxies = None
 
     def set_proxy(self, host, port, user, password):

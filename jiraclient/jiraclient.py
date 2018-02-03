@@ -31,6 +31,7 @@ from ._auth import _get_auth_header
 from .models import (
     Board,
     Project,
+    Epic,
     Sprint,
     Issue
 )
@@ -51,49 +52,49 @@ class JiraClient(object):
             timeout  = 30,
         )
 
-    # GET /rest/agile/1.0/board
-    def get_all_boards(self):
+    # GET /rest/agile/latest/board
+    def get_boards(self):
         request = HTTPRequest()
         request.method = 'GET'
-        request.path = '/rest/agile/1.0/board'
+        request.path = '/rest/agile/latest/board'
         return self._perform_request(request, _parse_json_to_class, Board, ['id', 'name', 'type', 'location'])
 
     def get_board(self, name):
         name = name.strip()
-        boards = self.get_all_boards()
+        boards = self.get_boards()
         for board in boards:
             if name == board.name.strip():
                 return board
         return None
 
-    # GET /rest/agile/1.0/board/{boardId}/project
+    # GET /rest/agile/latest/board/{boardId}/project
     def get_projects_for_board(self, board_id):
         request = HTTPRequest()
         request.method = 'GET'
-        request.path = '/rest/agile/1.0/board/{}/project'.format(board_id)
+        request.path = '/rest/agile/latest/board/{}/project'.format(board_id)
         return self._perform_request(request, _parse_json_to_class, Project, ['id', 'name', 'key', 'projectTypeKey'])
 
-    # GET /rest/agile/1.0/board/{boardId}/epic
+    # GET /rest/agile/latest/board/{boardId}/epic
     def get_epics_for_board(self, board_id, start_at=0, max_results=50):
         request = HTTPRequest()
         request.method = 'GET'
-        request.path = '/rest/agile/1.0/board/{}/epic'.format(board_id)
+        request.path = '/rest/agile/latest/board/{}/epic'.format(board_id)
         request.query = 'startAt={}&maxResults={}'.format(start_at, max_results)
-        return self._perform_request(request, _parse_json_to_epics)
+        return self._perform_request(request, _parse_json_to_class, Epic, ['id', 'name', 'key'])
 
-    # GET /rest/agile/1.0/board/{boardId}/backlog
+    # GET /rest/agile/latest/board/{boardId}/backlog
     def get_issues_for_board(self, board_id, start_at=0, max_results=50):
         request = HTTPRequest()
         request.method = 'GET'
-        request.path = '/rest/agile/1.0/board/{}/backlog'.format(board_id)
+        request.path = '/rest/agile/latest/board/{}/backlog'.format(board_id)
         request.query = 'startAt={}&maxResults={}'.format(start_at, max_results)
         return self._perform_request(request, _parse_json_to_issues, Issue, ['id', 'key', 'fields'])
 
-    # GET /rest/agile/1.0/board/{boardId}/sprint
+    # GET /rest/agile/latest/board/{boardId}/sprint
     def get_sprints_for_board(self, board_id):
         request = HTTPRequest()
         request.method = 'GET'
-        request.path = '/rest/agile/1.0/board/{}/sprint'.format(board_id)
+        request.path = '/rest/agile/latest/board/{}/sprint'.format(board_id)
         return self._perform_request(request, _parse_json_to_class, Sprint, ['id', 'state', 'name', 'startDate', 'endDate', 'completeDate', 'goal'])
 
     def get_active_sprint(self, board_id):
@@ -103,13 +104,14 @@ class JiraClient(object):
                 return sprint
         return None
 
-    # GET /rest/agile/1.0/board/{boardId}/sprint/{sprintId}/issue
+    # GET /rest/agile/latest/board/{boardId}/sprint/{sprintId}/issue
     def get_issues_for_sprint(self, board_id, sprint_id, start_at=0, max_results=50):
         request = HTTPRequest()
         request.method = 'GET'
-        request.path = '/rest/agile/1.0/board/{}/sprint/{}/issue'.format(board_id, sprint_id)
+        request.path = '/rest/agile/latest/board/{}/sprint/{}/issue'.format(board_id, sprint_id)
         request.query = 'startAt={}&maxResults={}'.format(start_at, max_results)        
         return self._perform_request(request, _parse_json_to_issues, Issue, ['id', 'key', 'fields'])
+
 
     def _perform_request(self, request, parser=None, result_class=None, attrs=[]):
         request.host = self.host
