@@ -37,7 +37,8 @@ from .models import (
 )
 from ._deserialize import (
     _parse_json_to_class,
-    _parse_json_to_issues
+    _parse_json_to_issues,
+    _parse_json_to_issue
 )
 
 class JiraClient(object):
@@ -88,7 +89,7 @@ class JiraClient(object):
         request.method = 'GET'
         request.path = '/rest/agile/latest/board/{}/backlog'.format(board_id)
         request.query = 'startAt={}&maxResults={}'.format(start_at, max_results)
-        return self._perform_request(request, _parse_json_to_issues, Issue, ['id', 'key', 'fields'])
+        return self._perform_request(request, _parse_json_to_issues)
 
     # GET /rest/agile/latest/board/{boardId}/sprint
     def get_sprints_for_board(self, board_id):
@@ -110,14 +111,29 @@ class JiraClient(object):
         request.method = 'GET'
         request.path = '/rest/agile/latest/board/{}/sprint/{}/issue'.format(board_id, sprint_id)
         request.query = 'startAt={}&maxResults={}'.format(start_at, max_results)        
-        return self._perform_request(request, _parse_json_to_issues, Issue, ['id', 'key', 'fields'])
+        return self._perform_request(request, _parse_json_to_issues)
+
+    # GET /rest/api/2/search?jql={jql}
+    def search_issues(self, jql, start_at=0, max_results=50):
+        request = HTTPRequest()
+        request.method = 'GET'
+        request.path = '/rest/api/2/search'
+        request.query = 'jql={}&startAt={}&maxResults={}'.format(jql, start_at, max_results)        
+        return self._perform_request(request, _parse_json_to_issues)
+
+    # GET /rest/api/2/issue/{id_or_key}
+    def get_issue(self, id_or_key):
+        request = HTTPRequest()
+        request.method = 'GET'
+        request.path = '/rest/api/2/issue/{}'.format(id_or_key)        
+        return self._perform_request(request, _parse_json_to_issue)
 
 
     def _perform_request(self, request, parser=None, result_class=None, attrs=[]):
         request.host = self.host
         request.headers = {
-            'Cache-Controle': 'no-cache, must-revalidate',
-            'Accept': 'application/json',
+            'cache-control': 'no-cache, must-revalidate',
+            'accept': 'application/json',
             'authorization': _get_auth_header(self.username, self.password)
         }
 
@@ -125,6 +141,9 @@ class JiraClient(object):
         result = json.loads(response.body.decode('UTF-8'))
 
         if parser:
-            return parser(result, result_class, attrs)
+            if result_class:
+                return parser(result, result_class, attrs)
+            else:
+                return parser(result)
         else:
             return result

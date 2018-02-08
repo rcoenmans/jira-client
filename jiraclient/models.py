@@ -21,6 +21,24 @@
 # SOFTWARE.
 # -----------------------------------------------------------------------------
 
+class Attachment(object):
+    def __init__(self):
+        self.id = id
+        self.filename = filename
+        self.author = author
+        self.created = created
+        self.size = size
+        self.mime = mime
+        self.content = content
+
+class Comment(object):
+    def __init__(self):
+        self.id = id
+        self.author = author
+        self.body = body
+        self.created = created
+        self.updated = updated
+
 class Board(object):
     def __init__(self):
         self.id = None
@@ -31,14 +49,38 @@ class Board(object):
     def __str__(self):
         return '{} {}'.format(self.id, self.name)
 
+class User(object):
+    def __init__(self):
+        self.name = None
+        self.email = None
+        self.display = None
+
+    def __str__(self):
+        return '{} ({})'.format(self.name, self.email)
+
 class Issue(object):
     def __init__(self):
         self.id = None
         self.key = None
-        self.fields = {}
+        self.summary = None
+        self.description = None
+
+        self.priority = Priority.none
+        self.type = None
+        self.status = None
+        
+        self.created = None
+        self.updated = None
+
+        self.creator = None
+        self.reporter = None
+        self.assignee = None
+        
+        self.comments = []
+        self.attachments = []
 
     def __str__(self):
-        return '{} {}'.format(self.id, self.key)
+        return '{} {}'.format(self.key, self.summary)
 
 class Sprint(object):
     def __init__(self):

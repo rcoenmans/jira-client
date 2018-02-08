@@ -25,7 +25,11 @@ from .models import (
     Project,
     Board,
     Issue,
-    Sprint
+    Sprint,
+    Priority,
+    Attachment,
+    User,
+    Comment
 )
 
 def _parse_json_to_class(response, result_class, attrs):
@@ -41,11 +45,75 @@ def _map_attrs_values(result_class, attrs, values):
             setattr(result, attr, values[attr])
     return result
     
-def _parse_json_to_issues(response, result_class, attrs):
+def _parse_json_to_issues(response):
     issues = []
     for issue in response['issues']:
-        issues.append(_map_attrs_values(Issue, ['id', 'key', 'fields'], issue))
+        issues.append(_parse_json_to_issue(issue))
     return issues
+
+def _parse_json_to_issue(response):
+    issue = Issue()
+    issue.id          = response['id']
+    issue.key         = response['key']
+    issue.summary     = str(response['fields']['summary'])
+    issue.description = str(response['fields']['description'])
+        
+    issue.type        = response['fields']['issuetype']['name']
+    issue.status      = response['fields']['status']['name']
+    issue.priority    = response['fields']['priority']['name']
+
+    issue.created     = response['fields']['created']
+    issue.updated     = response['fields']['updated']
+
+    issue.creator = User()
+    issue.creator.name    = response['fields']['creator']['name']
+    issue.creator.email   = response['fields']['creator']['emailAddress'],
+    issue.creator.display = response['fields']['creator']['displayName']
+
+    issue.reporter = User()
+    issue.reporter.name    = response['fields']['reporter']['name'],
+    issue.reporter.email   = response['fields']['reporter']['emailAddress'],
+    issue.reporter.display = response['fields']['reporter']['displayName']
+
+    if response['fields']['assignee']:
+        issue.assignee = User()
+        issue.assignee.name    = response['fields']['assignee']['name'],
+        issue.assignee.email   = response['fields']['assignee']['emailAddress'],
+        issue.assignee.display = response['fields']['assignee']['displayName']
+
+    if 'comment' in response['fields']:
+        for resp in response['fields']['comment']['comments']:
+            comment = Comment()
+            comment.id      = resp['id']
+            comment.body    = resp['body'],
+            comment.created = resp['created'],
+            comment.updated = resp['updated']
+
+            comment.author = User()
+            comment.author.name    = resp['author']['name']
+            comment.author.email   = resp['author']['emailAddress']
+            comment.author.display = resp['author']['displayName']
+
+            issue.comments.append(comment)
+
+    if 'attachment' in response['fields']:
+        for resp in response['fields']['attachment']:
+            attachment = Attachment()
+            attachment.id       = resp['id'] 
+            attachment.filename = resp['filename']
+            attachment.created  = resp['created']
+            attachment.size     = resp['size']
+            attachment.mime     = resp['mimeType']
+            attachment.content  = resp['content']
+
+            attachment.author = User()
+            attachment.author.name    = resp['author']['name']
+            attachment.author.email   = resp['author']['emailAddress'] 
+            attachment.author.display = resp['author']['displayName'] 
+            
+            issue.attachments.append(attachment)
+
+    return issue
 
 def _parse_json_to_sprints(response):
     sprints = []
