@@ -23,21 +23,21 @@
 
 class Attachment(object):
     def __init__(self):
-        self.id = id
-        self.filename = filename
-        self.author = author
-        self.created = created
-        self.size = size
-        self.mime = mime
-        self.content = content
+        self.id = None
+        self.filename = None
+        self.author = None
+        self.created = None
+        self.size = None
+        self.mime = None
+        self.content = None
 
 class Comment(object):
     def __init__(self):
-        self.id = id
-        self.author = author
-        self.body = body
-        self.created = created
-        self.updated = updated
+        self.id = None
+        self.author = None
+        self.body = None
+        self.created = None
+        self.updated = None
 
 class Board(object):
     def __init__(self):
@@ -65,7 +65,7 @@ class Issue(object):
         self.summary = None
         self.description = None
 
-        self.priority = Priority.none
+        self.priority = None
         self.type = None
         self.status = None
         
