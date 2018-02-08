@@ -26,7 +26,6 @@ from .models import (
     Board,
     Issue,
     Sprint,
-    Priority,
     Attachment,
     User,
     Comment
@@ -67,26 +66,26 @@ def _parse_json_to_issue(response):
 
     issue.creator = User()
     issue.creator.name    = response['fields']['creator']['name']
-    issue.creator.email   = response['fields']['creator']['emailAddress'],
+    issue.creator.email   = response['fields']['creator']['emailAddress']
     issue.creator.display = response['fields']['creator']['displayName']
 
     issue.reporter = User()
-    issue.reporter.name    = response['fields']['reporter']['name'],
-    issue.reporter.email   = response['fields']['reporter']['emailAddress'],
+    issue.reporter.name    = response['fields']['reporter']['name']
+    issue.reporter.email   = response['fields']['reporter']['emailAddress']
     issue.reporter.display = response['fields']['reporter']['displayName']
 
     if response['fields']['assignee']:
         issue.assignee = User()
-        issue.assignee.name    = response['fields']['assignee']['name'],
-        issue.assignee.email   = response['fields']['assignee']['emailAddress'],
+        issue.assignee.name    = response['fields']['assignee']['name']
+        issue.assignee.email   = response['fields']['assignee']['emailAddress']
         issue.assignee.display = response['fields']['assignee']['displayName']
 
     if 'comment' in response['fields']:
         for resp in response['fields']['comment']['comments']:
             comment = Comment()
             comment.id      = resp['id']
-            comment.body    = resp['body'],
-            comment.created = resp['created'],
+            comment.body    = resp['body']
+            comment.created = resp['created']
             comment.updated = resp['updated']
 
             comment.author = User()
