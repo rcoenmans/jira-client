@@ -53,6 +53,12 @@ class JiraClient(object):
             timeout  = 30,
         )
 
+    def set_proxy(self, host, port, user, password):
+        self._http_client.set_proxy(host, port, user, password)
+
+    def set_session_token(self, session_id, token):
+        self._http_client.set_session_token(session_id, token)
+
     # GET /rest/agile/latest/board
     def get_boards(self):
         request = HTTPRequest()
@@ -127,7 +133,6 @@ class JiraClient(object):
         request.method = 'GET'
         request.path = '/rest/api/2/issue/{}'.format(id_or_key)        
         return self._perform_request(request, _parse_json_to_issue)
-
 
     def _perform_request(self, request, parser=None, result_class=None, attrs=[]):
         request.host = self.host

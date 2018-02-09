@@ -41,6 +41,7 @@ class _HTTPClient(object):
         self.session = session
         self.timeout = timeout
         self.proxies = None
+        self.cookies = None
 
     def set_proxy(self, host, port, user, password):
         '''
@@ -66,6 +67,10 @@ class _HTTPClient(object):
         self.proxies = {'http': 'http://{}'.format(proxy_string),
                         'https': 'https://{}'.format(proxy_string)}
 
+    def set_session_token(self, session_id, xsrf_token):
+        self.cookies = {'JSESSIONID': session_id,
+                        'atlassian.xsrf.token': xsrf_token}
+
     def perform_request(self, request):
         '''
         Sends an HTTPRequest to Azure Storage and returns an HTTPResponse. If 
@@ -85,6 +90,7 @@ class _HTTPClient(object):
                                         params=request.query,
                                         headers=request.headers,
                                         data=request.body or None,
+                                        cookies=self.cookies,
                                         timeout=self.timeout,
                                         proxies=self.proxies)
 
