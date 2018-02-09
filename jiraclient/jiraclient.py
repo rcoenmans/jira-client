@@ -138,9 +138,11 @@ class JiraClient(object):
         request.host = self.host
         request.headers = {
             'cache-control': 'no-cache, must-revalidate',
-            'accept': 'application/json',
-            'authorization': _get_auth_header(self.username, self.password)
+            'accept': 'application/json'
         }
+
+        if self.username and self.password:
+            request.headers['authorization'] = _get_auth_header(self.username, self.password)
 
         response = self._http_client.perform_request(request)
         result = json.loads(response.body.decode('UTF-8'))
