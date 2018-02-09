@@ -1,4 +1,6 @@
 build
 dist
-jira_settings.txt
 __pycache__
+
+jira_settings.txt
+jira_client.egg-info
