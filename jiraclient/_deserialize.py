@@ -59,8 +59,7 @@ def _parse_json_to_issue(response):
         
     issue.type        = response['fields']['issuetype']['name']
     issue.status      = response['fields']['status']['name']
-    issue.priority    = response['fields']['priority']['name']
-
+    
     issue.created     = response['fields']['created']
     issue.updated     = response['fields']['updated']
 
@@ -73,6 +72,9 @@ def _parse_json_to_issue(response):
     issue.reporter.name    = response['fields']['reporter']['name']
     issue.reporter.email   = response['fields']['reporter']['emailAddress']
     issue.reporter.display = response['fields']['reporter']['displayName']
+
+    if response['fields']['priority']:
+        issue.priority = response['fields']['priority']['name']
 
     if response['fields']['assignee']:
         issue.assignee = User()

@@ -97,3 +97,6 @@ class JiraClientTest(unittest.TestCase):
         issue  = client.get_issue('KAUR-1931')
 
         self.assertIsNotNone(issue)
+
+if __name__ == '__main__':
+    unittest.main()
