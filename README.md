@@ -1,17 +1,14 @@
-Jira Client
-===========
+# Jira Client
 This project provides a client library for working with Jira boards/issues/tasks.
 
-Installation
-------------
+## Installation
 ```
 pip install jira-client
 ```
 
-Boards
-------
+## Boards
 Returns all boards. This only includes boards that you have permission to view.
-```
+```python
 from jiraclient.jiraclient import JiraClient
 
 client = JiraClient("contoso.atlassian.net", "username", "password")
