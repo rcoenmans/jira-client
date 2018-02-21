@@ -38,7 +38,9 @@ from .models import (
 from ._deserialize import (
     _parse_json_to_class,
     _parse_json_to_issues,
-    _parse_json_to_issue
+    _parse_json_to_issue,
+    _parse_json_to_board,
+    _parse_json_to_epic
 )
 
 class JiraClient(object):
@@ -66,13 +68,12 @@ class JiraClient(object):
         request.path = '/rest/agile/latest/board'
         return self._perform_request(request, _parse_json_to_class, Board, ['id', 'name', 'type', 'location'])
 
-    def get_board(self, name):
-        name = name.strip()
-        boards = self.get_boards()
-        for board in boards:
-            if name == board.name.strip():
-                return board
-        return None
+    # GET /rest/agile/latest/board/{boardId}
+    def get_board(self, board_id):
+        request = HTTPRequest()
+        request.method = 'GET'
+        request.path = '/rest/agile/latest/board/{}'.format(board_id)
+        return self._perform_request(request, _parse_json_to_board)
 
     # GET /rest/agile/latest/board/{boardId}/project
     def get_projects_for_board(self, board_id):
@@ -82,12 +83,19 @@ class JiraClient(object):
         return self._perform_request(request, _parse_json_to_class, Project, ['id', 'name', 'key', 'projectTypeKey'])
 
     # GET /rest/agile/latest/board/{boardId}/epic
-    def get_epics_for_board(self, board_id, start_at=0, max_results=50):
+    def get_epics(self, board_id, start_at=0, max_results=50):
         request = HTTPRequest()
         request.method = 'GET'
         request.path = '/rest/agile/latest/board/{}/epic'.format(board_id)
         request.query = 'startAt={}&maxResults={}'.format(start_at, max_results)
-        return self._perform_request(request, _parse_json_to_class, Epic, ['id', 'name', 'key'])
+        return self._perform_request(request, _parse_json_to_class, Epic, ['id', 'name', 'key', 'summary', 'done'])
+
+    # GET /rest/agile/latest/epic/{epicIdOrKey}
+    def get_epic(self, epic_id_or_key):
+        request = HTTPRequest()
+        request.method = 'GET'
+        request.path = '/rest/agile/latest/epic/{}'.format(epic_id_or_key)
+        return self._perform_request(request, _parse_json_to_epic)
 
     # GET /rest/agile/latest/board/{boardId}/backlog
     def get_issues_for_board(self, board_id, start_at=0, max_results=50):

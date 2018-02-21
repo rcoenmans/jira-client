@@ -107,3 +107,5 @@ class Epic(object):
         self.id = None
         self.key = None
         self.name = None
+        self.summary = None
+        self.done = False

@@ -39,6 +39,24 @@ class JiraClientTest(unittest.TestCase):
         self.assertIsNotNone(boards)
         self.assertGreater(len(boards), 0)
     
+    def test_get_board(self):
+        client = JiraClient(self.host, self.username, self.password)
+        boards = client.get_boards()
+        board  = client.get_board(boards[0].id)
+        self.assertIsNotNone(board)
+
+    def test_get_epics(self):
+        client = JiraClient(self.host, self.username, self.password)
+        boards = client.get_boards()
+        epics  = client.get_epics(boards[2].id)
+        self.assertIsNotNone(epics)
+        self.assertGreater(len(epics), 0)
+
+    def test_get_epic(self):
+        client = JiraClient(self.host, self.username, self.password)
+        epic   = client.get_epic(27275)
+        self.assertIsNotNone(epic)
+
     def test_get_projects_for_board(self):
         client = JiraClient(self.host, self.username, self.password)
         

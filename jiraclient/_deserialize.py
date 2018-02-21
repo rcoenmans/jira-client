@@ -28,7 +28,8 @@ from .models import (
     Sprint,
     Attachment,
     User,
-    Comment
+    Comment,
+    Epic
 )
 
 def _parse_json_to_class(response, result_class, attrs):
@@ -126,3 +127,10 @@ def _parse_json_to_sprint(response):
     attrs = ['id', 'state', 'name', 'startDate', 'endDate', 'completeDate', 'goal']
     return _map_attrs_values(Sprint, attrs, response)
 
+def _parse_json_to_board(response):
+    attrs = ['id', 'name', 'type', 'location']
+    return _map_attrs_values(Board, attrs, response)
+
+def _parse_json_to_epic(response):
+    attrs = ['id', 'name', 'key', 'summary', 'done']
+    return _map_attrs_values(Epic, attrs, response)
