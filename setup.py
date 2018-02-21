@@ -31,7 +31,7 @@ if __name__ == "__main__":
         name='jira-client',
         version='0.0.1',
         description='Jira client',
-        long_description=open('README.rst', 'r').read(),
+        long_description=open('README.md', 'r').read(),
         license='MIT License',
         author='Robbie Coenmans',
         author_email='robbie.coenmans@outlook.com',
