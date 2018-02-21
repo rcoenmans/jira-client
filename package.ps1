@@ -1,3 +1,7 @@
+# Remove build/dist
+Remove-Item -Path 'build' -Recurse -Force
+Remove-Item -Path 'dist'  -Recurse -Force
+
 # Create the source distribution
 Write-Host "Creating source dist"
 Start-Process python -ArgumentList 'setup.py', 'sdist' -Wait -NoNewWindow

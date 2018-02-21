@@ -33,7 +33,7 @@ print(board.name)
 ## Epics
 Returns all epics from the board, for the given board identifier. This only includes epics that you have permission to view. Note, if you don't have permission to view the board, no epics will be returned at all.
 ```python
-# Connect to Jira
+# Initialize the Jira client
 client = JiraClient("contoso.atlassian.net", "username", "password")
 
 # Specify a board id, start index and max results
