@@ -7,3 +7,16 @@ Installation
 ```
 pip install jira-client
 ```
+
+Boards
+------
+Returns all boards. This only includes boards that you have permission to view.
+```
+from jiraclient.jiraclient import JiraClient
+
+client = JiraClient("contoso.atlassian.net", "username", "password")
+boards = client.get_boards()
+
+for board in boards:
+    print(board.name)
+```
