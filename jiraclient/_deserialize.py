@@ -124,8 +124,18 @@ def _parse_json_to_sprints(response):
     return sprints
 
 def _parse_json_to_sprint(response):
-    attrs = ['id', 'state', 'name', 'startDate', 'endDate', 'completeDate', 'goal']
-    return _map_attrs_values(Sprint, attrs, response)
+    sprint = Sprint()
+    sprint.id    = response['id']
+    sprint.state = response['state']
+    sprint.name  = response['name']
+    sprint.goal  = response['goal']
+    
+    sprint.board_id      = response['originBoardId']
+    sprint.start_date    = response['startDate']
+    sprint.end_date      = response['endDate']
+    sprint.complete_date = response['completeDate']
+    
+    return sprint
 
 def _parse_json_to_board(response):
     attrs = ['id', 'name', 'type', 'location']

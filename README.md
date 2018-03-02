@@ -1,5 +1,5 @@
 # Jira Client
-This project provides a client library for working with Jira boards/issues/tasks.
+This project provides a client library for working with Jira boards, epics, sprints and issues.
 
 ## Installation
 ```
@@ -47,4 +47,33 @@ epics = client.get_epics(board_id, start_at, max_results)
 # Iterate the list of epics
 for epic in epics:
     print(epic.name)
+```
+
+## Sprints
+Returns the sprints for a given board identifier.
+```python
+client = JiraClient("contoso.atlassian.net", "username", "password")
+        
+board_id = 12345
+sprints = client.get_sprints_for_board(board_id)
+
+# Iterate the list of sprints
+for sprint in sprints:
+    print('{}: {} - {}'.format(sprint.name, sprint.start_date, sprint.end_date))
+```
+Returns the active sprint for a given board identifier.
+```python
+client = JiraClient("contoso.atlassian.net", "username", "password")
+        
+board_id = 12345
+active_sprint = client.get_active_sprint(board_id)
+print(active_sprint.goal)
+```
+Returns the sprint for a given sprint identifier.
+```python
+client = JiraClient("contoso.atlassian.net", "username", "password")
+        
+sprint_id = 123
+sprint = client.get_sprint(sprint_id)
+print(sprint.name)
 ```

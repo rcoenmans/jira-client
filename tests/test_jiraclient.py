@@ -92,6 +92,14 @@ class JiraClientTest(unittest.TestCase):
 
         self.assertIsNotNone(sprint)
 
+    def test_get_sprint(self):
+        client = JiraClient(self.host, self.username, self.password)
+
+        sprint_id = 14
+        sprint = client.get_sprint(sprint_id)
+
+        self.assertIsNotNone(sprint)
+
     def test_get_issues_for_active_sprint(self):
         client = JiraClient(self.host, self.username, self.password)
         

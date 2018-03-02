@@ -40,7 +40,8 @@ from ._deserialize import (
     _parse_json_to_issues,
     _parse_json_to_issue,
     _parse_json_to_board,
-    _parse_json_to_epic
+    _parse_json_to_epic,
+    _parse_json_to_sprint
 )
 
 class JiraClient(object):
@@ -118,6 +119,13 @@ class JiraClient(object):
             if sprint.state == 'active':
                 return sprint
         return None
+
+    # GET /rest/agile/latest/sprint/{sprintId}
+    def get_sprint(self, sprint_id):
+        request = HTTPRequest()
+        request.method = 'GET'
+        request.path = '/rest/agile/latest/sprint/{}'.format(sprint_id)
+        return self._perform_request(request, _parse_json_to_sprint)
 
     # GET /rest/agile/latest/board/{boardId}/sprint/{sprintId}/issue
     def get_issues_for_sprint(self, board_id, sprint_id, start_at=0, max_results=50):

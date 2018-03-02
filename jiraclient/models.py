@@ -87,10 +87,13 @@ class Sprint(object):
         self.id = None
         self.state = None
         self.name = None
-        self.startDate = None
-        self.endDate = None
-        self.completeDate = None
         self.goal = None
+        
+        self.start_date = None
+        self.end_date = None
+        self.complete_date = None
+        
+        self.board_id = None
 
     def __str__(self):
         return '{} {} ({})'.format(self.id, self.name, self.state)
