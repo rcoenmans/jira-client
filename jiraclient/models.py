@@ -78,6 +78,11 @@ class Issue(object):
         
         self.comments = []
         self.attachments = []
+        self.worklog = []
+        
+        self.project = None
+        self.epic = None
+        self.sprint = None
 
     def __str__(self):
         return '{} {}'.format(self.key, self.summary)
@@ -103,7 +108,9 @@ class Project(object):
         self.id = None
         self.key = None
         self.name = None
-        self.projectTypeKey = None
+
+    def __str__(self):
+        return '{} {}'.format(self.key, self.name)
 
 class Epic(object):
     def __init__(self):
@@ -115,3 +122,11 @@ class Epic(object):
 
     def __str__(self):
         return '{} {}'.format(self.key, self.name)
+
+class Worklog(object):
+    def __init__(self):
+        self.id = None
+        self.issue_id = None
+        self.comment = None
+        self.updated = None
+        self.author = None

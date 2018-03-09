@@ -143,11 +143,11 @@ class JiraClient(object):
         request.query = 'jql={}&startAt={}&maxResults={}'.format(jql, start_at, max_results)        
         return self._perform_request(request, _parse_json_to_issues)
 
-    # GET /rest/api/2/issue/{id_or_key}
+    # GET /rest/agile/latest/issue/{id_or_key}
     def get_issue(self, id_or_key):
         request = HTTPRequest()
         request.method = 'GET'
-        request.path = '/rest/api/2/issue/{}'.format(id_or_key)        
+        request.path = '/rest/agile/latest/issue/{}'.format(id_or_key)        
         return self._perform_request(request, _parse_json_to_issue)
 
     def _perform_request(self, request, parser=None, result_class=None, attrs=[]):

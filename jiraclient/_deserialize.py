@@ -29,7 +29,8 @@ from .models import (
     Attachment,
     User,
     Comment,
-    Epic
+    Epic,
+    Worklog
 )
 
 def _parse_json_to_class(response, result_class, attrs):
@@ -83,6 +84,12 @@ def _parse_json_to_issue(response):
         issue.assignee.email   = response['fields']['assignee']['emailAddress']
         issue.assignee.display = response['fields']['assignee']['displayName']
 
+    if 'project' in response['fields']:
+        issue.project = _parse_json_to_project(response['fields']['project'])
+
+    if 'epic' in response['fields']:
+        issue.epic = _parse_json_to_epic(response['fields']['epic'])
+
     if 'comment' in response['fields']:
         for resp in response['fields']['comment']['comments']:
             comment = Comment()
@@ -115,6 +122,12 @@ def _parse_json_to_issue(response):
             
             issue.attachments.append(attachment)
 
+    if 'worklog' in response['fields']:
+        wlgtotal = int(response['fields']['worklog']['total'])
+        if wlgtotal > 0:
+            for resp in response['fields']['worklog']['worklogs']:
+                issue.worklog.append(_parse_json_to_worklog(resp))
+
     return issue
 
 def _parse_json_to_sprints(response):
@@ -144,3 +157,20 @@ def _parse_json_to_board(response):
 def _parse_json_to_epic(response):
     attrs = ['id', 'name', 'key', 'summary', 'done']
     return _map_attrs_values(Epic, attrs, response)
+
+def _parse_json_to_project(response):
+    attrs = ['id', 'key', 'name']
+    return _map_attrs_values(Project, attrs, response)
+
+def _parse_json_to_worklog(response):
+    worklog = Worklog()
+    worklog.id = response['id']
+
+    worklog.issue_id = response['issueId']
+    worklog.updated  = response['updated']
+    worklog.comment  = response['comment']
+    
+    worklog.author = User()
+    worklog.author.name    = response['author']['name']
+    worklog.author.display = response['author']['displayName'] 
+    return worklog
