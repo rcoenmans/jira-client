@@ -45,7 +45,7 @@ from ._deserialize import (
 )
 
 class JiraClient(object):
-    def __init__(self, host, username, password):
+    def __init__(self, host, username=None, password=None):
         self.host = host
         self.username = username
         self.password = password

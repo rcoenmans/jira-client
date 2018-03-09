@@ -112,3 +112,6 @@ class Epic(object):
         self.name = None
         self.summary = None
         self.done = False
+
+    def __str__(self):
+        return '{} {}'.format(self.key, self.name)
