@@ -6,6 +6,32 @@ This project provides a client library for working with Jira boards, epics, spri
 pip install jira-client
 ```
 
+## Connecting to Jira
+```python
+# Import the JiraClient module
+from jiraclient.jiraclient import JiraClient
+
+# Initialize the Jira client using the host name, username and password
+client = JiraClient("contoso.atlassian.net", "username", "password")
+```
+
+Some companies host their local Jira instance on a path like /jira, in that case you need to provide the path as well.
+```python
+client = JiraClient("jira.contoso.com/jira", "username", "password")
+```
+
+### What if I'm behind a proxy?
+Specify the proxy host, port and (Windows) credentials to the client.
+```python
+from jiraclient.jiraclient import JiraClient
+
+# Initialize the Jira client
+client = JiraClient("contoso.atlassian.net", "username", "password")
+
+# Specify the host, port and username/password for your proxy
+client.set_proxy("proxy.contoso.com", 8080, "username", "password")
+```
+
 ## Boards
 Returns all boards. This only includes boards that you have permission to view.
 ```python
