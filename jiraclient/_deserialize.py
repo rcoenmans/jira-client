@@ -84,49 +84,25 @@ def _parse_json_to_issue(response):
         issue.assignee.email   = response['fields']['assignee']['emailAddress']
         issue.assignee.display = response['fields']['assignee']['displayName']
 
-    if 'project' in response['fields']:
-        issue.project = _parse_json_to_project(response['fields']['project'])
+    if 'project' in response['fields']: 
+        if response['fields']['project']:
+            issue.project = _parse_json_to_project(response['fields']['project'])
 
     if 'epic' in response['fields']:
-        issue.epic = _parse_json_to_epic(response['fields']['epic'])
+        if response['fields']['epic']:
+            issue.epic = _parse_json_to_epic(response['fields']['epic'])
 
     if 'comment' in response['fields']:
         for resp in response['fields']['comment']['comments']:
-            comment = Comment()
-            comment.id      = resp['id']
-            comment.body    = resp['body']
-            comment.created = resp['created']
-            comment.updated = resp['updated']
-
-            comment.author = User()
-            comment.author.name    = resp['author']['name']
-            comment.author.email   = resp['author']['emailAddress']
-            comment.author.display = resp['author']['displayName']
-
-            issue.comments.append(comment)
+            issue.comments.append(_parse_json_to_comment(resp))
 
     if 'attachment' in response['fields']:
         for resp in response['fields']['attachment']:
-            attachment = Attachment()
-            attachment.id       = resp['id'] 
-            attachment.filename = resp['filename']
-            attachment.created  = resp['created']
-            attachment.size     = resp['size']
-            attachment.mime     = resp['mimeType']
-            attachment.content  = resp['content']
-
-            attachment.author = User()
-            attachment.author.name    = resp['author']['name']
-            attachment.author.email   = resp['author']['emailAddress'] 
-            attachment.author.display = resp['author']['displayName'] 
-            
-            issue.attachments.append(attachment)
+            issue.attachments.append(_parse_json_to_attachement(resp))
 
     if 'worklog' in response['fields']:
-        wlgtotal = int(response['fields']['worklog']['total'])
-        if wlgtotal > 0:
-            for resp in response['fields']['worklog']['worklogs']:
-                issue.worklog.append(_parse_json_to_worklog(resp))
+        for resp in response['fields']['worklog']['worklogs']:
+            issue.worklog.append(_parse_json_to_worklog(resp))
 
     return issue
 
@@ -161,6 +137,34 @@ def _parse_json_to_epic(response):
 def _parse_json_to_project(response):
     attrs = ['id', 'key', 'name']
     return _map_attrs_values(Project, attrs, response)
+
+def _parse_json_to_attachement(response):
+    attachment = Attachment()
+    attachment.id       = response['id'] 
+    attachment.filename = response['filename']
+    attachment.created  = response['created']
+    attachment.size     = response['size']
+    attachment.mime     = response['mimeType']
+    attachment.content  = response['content']
+
+    attachment.author = User()
+    attachment.author.name    = response['author']['name']
+    attachment.author.email   = response['author']['emailAddress'] 
+    attachment.author.display = response['author']['displayName']
+    return attachment
+
+def _parse_json_to_comment(response):
+    comment = Comment()
+    comment.id      = response['id']
+    comment.body    = response['body']
+    comment.created = response['created']
+    comment.updated = response['updated']
+
+    comment.author = User()
+    comment.author.name    = response['author']['name']
+    comment.author.email   = response['author']['emailAddress']
+    comment.author.display = response['author']['displayName']
+    return comment
 
 def _parse_json_to_worklog(response):
     worklog = Worklog()
