@@ -39,13 +39,19 @@ def _parse_json_to_class(response, result_class, attrs):
         values.append(_map_attrs_values(result_class, attrs, value))
     return values
 
+def _get_attr_value(attr, values):
+    if attr in values:
+        return values[attr]
+    else:
+        return None
+
 def _map_attrs_values(result_class, attrs, values):
     result = result_class()
     for attr in attrs:
         if attr in values:
-            setattr(result, attr, values[attr])
+            setattr(result, attr, _get_attr_value(attr, values))
     return result
-    
+
 def _parse_json_to_issues(response):
     issues = []
     for issue in response['issues']:
@@ -125,15 +131,15 @@ def _parse_json_to_sprints(response):
 
 def _parse_json_to_sprint(response):
     sprint = Sprint()
-    sprint.id    = response['id']
-    sprint.state = response['state']
-    sprint.name  = response['name']
-    sprint.goal  = response['goal']
+    sprint.id    = _get_attr_value('id', response)
+    sprint.state = _get_attr_value('state', response)
+    sprint.name  = _get_attr_value('name', response)
+    sprint.goal  = _get_attr_value('goal', response)
     
-    sprint.board_id      = response['originBoardId']
-    sprint.start_date    = response['startDate']
-    sprint.end_date      = response['endDate']
-    sprint.complete_date = response['completeDate']
+    sprint.board_id      = _get_attr_value('originBoardId', response)
+    sprint.start_date    = _get_attr_value('startDate', response)
+    sprint.end_date      = _get_attr_value('endDate', response)
+    sprint.complete_date = _get_attr_value('completeDate', response)
     
     return sprint
 
