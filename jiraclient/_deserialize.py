@@ -84,6 +84,9 @@ def _parse_json_to_issue(response):
         issue.assignee.email   = response['fields']['assignee']['emailAddress']
         issue.assignee.display = response['fields']['assignee']['displayName']
 
+    if 'labels' in response['fields']:
+        issue.labels = response['fields']['labels']
+
     if 'project' in response['fields']: 
         if response['fields']['project']:
             issue.project = _parse_json_to_project(response['fields']['project'])
@@ -91,6 +94,14 @@ def _parse_json_to_issue(response):
     if 'epic' in response['fields']:
         if response['fields']['epic']:
             issue.epic = _parse_json_to_epic(response['fields']['epic'])
+    
+    if 'closedSprints' in response['fields']:
+        for resp in response['fields']['closedSprints']:
+            issue.closed_sprints.append(_parse_json_to_sprint(resp)) 
+
+    if 'sprint' in response['fields']:
+        if response['fields']['sprint']:
+            issue.sprint = _parse_json_to_sprint(response['fields']['sprint'])
 
     if 'comment' in response['fields']:
         for resp in response['fields']['comment']['comments']:

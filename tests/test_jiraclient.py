@@ -110,9 +110,9 @@ class JiraClientTest(unittest.TestCase):
         self.assertIsNotNone(issues)
         self.assertGreater(len(issues), 0)
 
-    def test_search_issues(self):
+    def test_search(self):
         client = JiraClient(self.host, self.username, self.password)
-        issues = client.search_issues(
+        issues = client.search(
             'project = KAUR AND status != Closed AND issuetype in (Story, Task, Bug) ORDER BY Rank ASC')
 
         self.assertIsNotNone(issues)

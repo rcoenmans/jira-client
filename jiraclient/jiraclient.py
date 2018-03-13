@@ -21,8 +21,8 @@
 # SOFTWARE.
 # -----------------------------------------------------------------------------
 
-import requests
 import json
+import requests
 
 from ._http import HTTPRequest
 from ._http.httpclient import _HTTPClient
@@ -32,8 +32,7 @@ from .models import (
     Board,
     Project,
     Epic,
-    Sprint,
-    Issue
+    Sprint
 )
 from ._deserialize import (
     _parse_json_to_class,
@@ -136,7 +135,7 @@ class JiraClient(object):
         return self._perform_request(request, _parse_json_to_issues)
 
     # GET /rest/api/2/search?jql={jql}
-    def search_issues(self, jql, start_at=0, max_results=50):
+    def search(self, jql, start_at=0, max_results=50):
         request = HTTPRequest()
         request.method = 'GET'
         request.path = '/rest/api/2/search'

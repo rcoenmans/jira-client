@@ -83,6 +83,9 @@ class Issue(object):
         self.project = None
         self.epic = None
         self.sprint = None
+        self.closed_sprints = []
+
+        self.labels = []
 
     def __str__(self):
         return '{} {}'.format(self.key, self.summary)

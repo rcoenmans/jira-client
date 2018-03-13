@@ -29,9 +29,9 @@ from setuptools import setup, find_packages
 if __name__ == "__main__":
     setup(
         name='jira-client',
-        version='0.0.6',
+        version='0.0.7',
         description='Jira client',
-        long_description=open('README.md', 'r').read(),
+        long_description='This project provides a client library for working with Jira boards, epics, sprints and issues.',
         license='MIT License',
         author='Robbie Coenmans',
         author_email='robbie.coenmans@outlook.com',
