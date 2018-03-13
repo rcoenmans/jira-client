@@ -40,6 +40,7 @@ from ._deserialize import (
     _parse_json_to_issue,
     _parse_json_to_board,
     _parse_json_to_epic,
+    _parse_json_to_sprints,
     _parse_json_to_sprint
 )
 
@@ -110,7 +111,7 @@ class JiraClient(object):
         request = HTTPRequest()
         request.method = 'GET'
         request.path = '/rest/agile/latest/board/{}/sprint'.format(board_id)
-        return self._perform_request(request, _parse_json_to_class, Sprint, ['id', 'state', 'name', 'startDate', 'endDate', 'completeDate', 'goal'])
+        return self._perform_request(request, _parse_json_to_sprints)
 
     def get_active_sprint(self, board_id):
         sprints = self.get_sprints_for_board(board_id)
@@ -148,6 +149,18 @@ class JiraClient(object):
         request.method = 'GET'
         request.path = '/rest/agile/latest/issue/{}'.format(id_or_key)        
         return self._perform_request(request, _parse_json_to_issue)
+
+    def download_attachment(self, id, filename):
+        request = HTTPRequest()
+        request.method = 'GET'
+        request.path = '/secure/attachment/{}/{}'.format(id, filename.replace(' ', '+'))
+        request.host = self.host
+
+        if self.username and self.password:
+            request.headers['authorization'] = _get_auth_header(self.username, self.password)
+
+        response = self._http_client.perform_request(request)
+        return response.body
 
     def _perform_request(self, request, parser=None, result_class=None, attrs=[]):
         request.host = self.host

@@ -39,11 +39,11 @@ def _parse_json_to_class(response, result_class, attrs):
         values.append(_map_attrs_values(result_class, attrs, value))
     return values
 
-def _get_attr_value(attr, values):
+def _get_attr_value(attr, values, default=None):
     if attr in values:
         return values[attr]
     else:
-        return None
+        return default
 
 def _map_attrs_values(result_class, attrs, values):
     result = result_class()
@@ -60,11 +60,12 @@ def _parse_json_to_issues(response):
 
 def _parse_json_to_issue(response):
     issue = Issue()
-    issue.id          = response['id']
-    issue.key         = response['key']
-    issue.summary     = str(response['fields']['summary'])
-    issue.description = str(response['fields']['description'])
-        
+    issue.id          = _get_attr_value('id', response)
+    issue.key         = _get_attr_value('key', response)
+    issue.summary     = _get_attr_value('summary', response['fields'])
+    issue.description = _get_attr_value('description', response['fields'])
+    issue.labels      = _get_attr_value('labels', response['fields'], [])
+
     issue.type        = response['fields']['issuetype']['name']
     issue.status      = response['fields']['status']['name']
     
@@ -89,9 +90,6 @@ def _parse_json_to_issue(response):
         issue.assignee.name    = response['fields']['assignee']['name']
         issue.assignee.email   = response['fields']['assignee']['emailAddress']
         issue.assignee.display = response['fields']['assignee']['displayName']
-
-    if 'labels' in response['fields']:
-        issue.labels = response['fields']['labels']
 
     if 'project' in response['fields']: 
         if response['fields']['project']:
@@ -140,7 +138,6 @@ def _parse_json_to_sprint(response):
     sprint.start_date    = _get_attr_value('startDate', response)
     sprint.end_date      = _get_attr_value('endDate', response)
     sprint.complete_date = _get_attr_value('completeDate', response)
-    
     return sprint
 
 def _parse_json_to_board(response):

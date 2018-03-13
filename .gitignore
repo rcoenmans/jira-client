@@ -1,5 +1,6 @@
 build
 dist
+tests/tmp
 __pycache__
 
 .pytest_cache

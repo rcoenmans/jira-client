@@ -29,7 +29,7 @@ from setuptools import setup, find_packages
 if __name__ == "__main__":
     setup(
         name='jira-client',
-        version='0.0.8',
+        version='0.0.9',
         description='Jira client',
         long_description='This project provides a client library for working with Jira boards, epics, sprints and issues.',
         license='MIT License',

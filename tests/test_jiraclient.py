@@ -110,18 +110,26 @@ class JiraClientTest(unittest.TestCase):
         self.assertIsNotNone(issues)
         self.assertGreater(len(issues), 0)
 
+    def test_download_attachment(self):
+        client = JiraClient(self.host, self.username, self.password)
+        issue = client.get_issue(22618)
+
+        if len(issue.attachments) > 0:
+            for attachment in issue.attachments:
+                with open('./tests/tmp/{}'.format(attachment.filename), 'wb') as f:
+                    f.write(client.download_attachment(attachment.id, attachment.filename))
+
     def test_search(self):
         client = JiraClient(self.host, self.username, self.password)
         issues = client.search(
-            'project = KAUR AND status != Closed AND issuetype in (Story, Task, Bug) ORDER BY Rank ASC')
+            'project = Contoso AND status != Closed AND issuetype in (Story, Task, Bug) ORDER BY Rank ASC')
 
         self.assertIsNotNone(issues)
         self.assertGreater(len(issues), 0)
 
     def test_get_issue(self):
         client = JiraClient(self.host, self.username, self.password)
-        issue  = client.get_issue('KAUR-1931')
-
+        issue  = client.get_issue(30284)
         self.assertIsNotNone(issue)
 
 if __name__ == '__main__':
