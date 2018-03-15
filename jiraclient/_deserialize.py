@@ -30,7 +30,8 @@ from .models import (
     User,
     Comment,
     Epic,
-    Worklog
+    Worklog,
+    Component
 )
 
 def _parse_json_to_class(response, result_class, attrs):
@@ -119,6 +120,14 @@ def _parse_json_to_issue(response):
         for resp in response['fields']['worklog']['worklogs']:
             issue.worklog.append(_parse_json_to_worklog(resp))
 
+    if 'components' in response['fields']:
+        for resp in response['fields']['components']:
+            issue.components.append(_parse_json_to_component(resp))
+
+    for key, value in response['fields'].items():
+        if key.startswith('customfield_'):
+            issue.custom[key] = value
+            
     return issue
 
 def _parse_json_to_sprints(response):
@@ -192,3 +201,7 @@ def _parse_json_to_worklog(response):
     worklog.author.name    = response['author']['name']
     worklog.author.display = response['author']['displayName'] 
     return worklog
+
+def _parse_json_to_component(response):
+    attrs = ['id', 'name', 'description']
+    return _map_attrs_values(Component, attrs, response)

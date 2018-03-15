@@ -79,13 +79,15 @@ class Issue(object):
         self.comments = []
         self.attachments = []
         self.worklog = []
-        
+        self.labels = []
+        self.components = []
+
         self.project = None
         self.epic = None
         self.sprint = None
         self.closed_sprints = []
 
-        self.labels = []
+        self.custom = {}
 
     def __str__(self):
         return '{} {}'.format(self.key, self.summary)
@@ -133,3 +135,9 @@ class Worklog(object):
         self.comment = None
         self.updated = None
         self.author = None
+
+class Component(object):
+    def __init__(self):
+        self.id = None
+        self.name = None
+        self.description = None
